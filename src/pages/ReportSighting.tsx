@@ -6,32 +6,65 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, MapPin, Camera, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const ReportSighting = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [selectedSpecies, setSelectedSpecies] = useState("");
   const [notes, setNotes] = useState("");
   const [reporterName, setReporterName] = useState("");
   const [reporterSurname, setReporterSurname] = useState("");
   const [animalStatus, setAnimalStatus] = useState<"normal" | "urgent">("normal");
   const [currentTime] = useState(new Date().toLocaleTimeString());
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const popularSpecies = [
     "Lion", "Leopard", "Elephant", "Buffalo", "Rhino",
     "Cheetah", "Zebra", "Giraffe", "Hippo", "Wildebeest"
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Sighting reported:", { 
-      selectedSpecies, 
-      notes, 
-      reporterName, 
-      reporterSurname, 
-      animalStatus 
-    });
-    navigate("/");
+    setIsSubmitting(true);
+    
+    try {
+      const { error } = await supabase
+        .from('wildlife_sightings')
+        .insert({
+          reporter_name: reporterName,
+          reporter_surname: reporterSurname,
+          species: selectedSpecies,
+          notes: notes || null,
+          animal_status: animalStatus,
+          // Mock coordinates for Maasai Mara
+          latitude: -1.2921,
+          longitude: 34.7516,
+          location_description: "Maasai Mara",
+          sighting_time: new Date().toISOString()
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Sighting reported successfully!",
+        description: "Thank you for contributing to wildlife conservation.",
+      });
+      
+      navigate("/");
+    } catch (error) {
+      console.error('Error submitting sighting:', error);
+      toast({
+        title: "Error submitting report",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -192,9 +225,9 @@ const ReportSighting = () => {
           <Button 
             type="submit" 
             className="w-full touch-target gradient-safari text-primary-foreground text-base font-semibold"
-            disabled={!selectedSpecies.trim() || !reporterName.trim() || !reporterSurname.trim()}
+            disabled={!selectedSpecies.trim() || !reporterName.trim() || !reporterSurname.trim() || isSubmitting}
           >
-            Report Sighting
+            {isSubmitting ? "Submitting..." : "Report Sighting"}
           </Button>
         </form>
       </div>
