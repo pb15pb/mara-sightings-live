@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      wildlife_sightings: {
+        Row: {
+          animal_status: string
+          created_at: string
+          id: string
+          latitude: number | null
+          location_description: string | null
+          longitude: number | null
+          notes: string | null
+          reporter_name: string
+          reporter_surname: string
+          sighting_time: string
+          species: string
+          updated_at: string
+        }
+        Insert: {
+          animal_status: string
+          created_at?: string
+          id?: string
+          latitude?: number | null
+          location_description?: string | null
+          longitude?: number | null
+          notes?: string | null
+          reporter_name: string
+          reporter_surname: string
+          sighting_time?: string
+          species: string
+          updated_at?: string
+        }
+        Update: {
+          animal_status?: string
+          created_at?: string
+          id?: string
+          latitude?: number | null
+          location_description?: string | null
+          longitude?: number | null
+          notes?: string | null
+          reporter_name?: string
+          reporter_surname?: string
+          sighting_time?: string
+          species?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
