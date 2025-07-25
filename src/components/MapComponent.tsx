@@ -1,32 +1,42 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
-// Fix for default markers not showing
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-
-const DefaultIcon = L.icon({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
-
-// Create custom icons for different animal states
-const createCustomIcon = (color: string) => {
+// Simple marker icons without image imports
+const createMarkerIcon = (color: string) => {
   return L.divIcon({
-    className: 'custom-marker',
-    html: `<div style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
+    className: 'custom-div-icon',
+    html: `
+      <div style="
+        background-color: ${color}; 
+        width: 24px; 
+        height: 24px; 
+        border-radius: 50%; 
+        border: 3px solid white; 
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        position: relative;
+      ">
+        <div style="
+          position: absolute;
+          bottom: -8px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 0;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-top: 8px solid ${color};
+        "></div>
+      </div>
+    `,
+    iconSize: [24, 32],
+    iconAnchor: [12, 32],
+    popupAnchor: [0, -32],
   });
 };
 
-const normalIcon = createCustomIcon('#22c55e'); // green
-const urgentIcon = createCustomIcon('#ef4444'); // red
+const normalIcon = createMarkerIcon('#22c55e'); // green
+const urgentIcon = createMarkerIcon('#ef4444'); // red
 
 interface Sighting {
   id: string;
