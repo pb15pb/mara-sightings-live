@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MapPin, Settings, Search } from "lucide-react";
+import MapComponent from "@/components/MapComponent";
 
 const MapView = () => {
-  const [mapboxToken, setMapboxToken] = useState("");
 
   return (
     <div className="h-screen flex flex-col">
@@ -37,43 +37,9 @@ const MapView = () => {
         </div>
       </div>
 
-      {/* Map Placeholder */}
-      <div className="flex-1 bg-muted/30 flex flex-col items-center justify-center p-8">
-        <div className="text-center space-y-4 max-w-sm">
-          <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-            <MapPin className="w-8 h-8 text-primary" />
-          </div>
-          <h2 className="text-xl font-semibold">Interactive Map</h2>
-          <p className="text-muted-foreground text-sm">
-            To enable the interactive map, please enter your Mapbox public token below:
-          </p>
-          <div className="space-y-3">
-            <Input
-              type="text"
-              placeholder="Enter Mapbox public token..."
-              value={mapboxToken}
-              onChange={(e) => setMapboxToken(e.target.value)}
-              className="mobile-input"
-            />
-            <Button 
-              className="w-full touch-target gradient-safari text-primary-foreground"
-              disabled={!mapboxToken.trim()}
-            >
-              Initialize Map
-            </Button>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Get your token at{" "}
-            <a 
-              href="https://mapbox.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              mapbox.com
-            </a>
-          </p>
-        </div>
+      {/* Map */}
+      <div className="flex-1">
+        <MapComponent />
       </div>
 
       {/* Quick Stats */}

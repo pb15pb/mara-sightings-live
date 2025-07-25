@@ -7,7 +7,6 @@ const BottomNavigation = () => {
     { to: "/report", icon: PlusCircle, label: "Report" },
     { to: "/", icon: Map, label: "Map" },
     { to: "/feed", icon: Activity, label: "Feed" },
-    { to: "/profile", icon: User, label: "Profile" },
   ];
 
   return (

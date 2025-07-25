@@ -11,6 +11,9 @@ const ReportSighting = () => {
   const navigate = useNavigate();
   const [selectedSpecies, setSelectedSpecies] = useState("");
   const [notes, setNotes] = useState("");
+  const [reporterName, setReporterName] = useState("");
+  const [reporterSurname, setReporterSurname] = useState("");
+  const [animalStatus, setAnimalStatus] = useState<"normal" | "urgent">("normal");
   const [currentTime] = useState(new Date().toLocaleTimeString());
   
   const popularSpecies = [
@@ -21,7 +24,13 @@ const ReportSighting = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission
-    console.log("Sighting reported:", { selectedSpecies, notes });
+    console.log("Sighting reported:", { 
+      selectedSpecies, 
+      notes, 
+      reporterName, 
+      reporterSurname, 
+      animalStatus 
+    });
     navigate("/");
   };
 
@@ -47,6 +56,31 @@ const ReportSighting = () => {
 
       <div className="p-4 space-y-6">
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Reporter Information */}
+          <div className="space-y-3">
+            <Label className="text-base font-medium">Reporter Information *</Label>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Input
+                  placeholder="First name"
+                  value={reporterName}
+                  onChange={(e) => setReporterName(e.target.value)}
+                  className="mobile-input"
+                  required
+                />
+              </div>
+              <div>
+                <Input
+                  placeholder="Last name"
+                  value={reporterSurname}
+                  onChange={(e) => setReporterSurname(e.target.value)}
+                  className="mobile-input"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Species Selection */}
           <div className="space-y-3">
             <Label htmlFor="species" className="text-base font-medium">
@@ -122,16 +156,18 @@ const ReportSighting = () => {
             <div className="grid grid-cols-2 gap-3">
               <Button 
                 type="button" 
-                variant="outline" 
+                variant={animalStatus === "normal" ? "default" : "outline"}
                 className="touch-target justify-start"
+                onClick={() => setAnimalStatus("normal")}
               >
                 <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
                 Normal Behavior
               </Button>
               <Button 
                 type="button" 
-                variant="outline" 
-                className="touch-target justify-start border-destructive text-destructive"
+                variant={animalStatus === "urgent" ? "destructive" : "outline"}
+                className="touch-target justify-start"
+                onClick={() => setAnimalStatus("urgent")}
               >
                 <div className="w-3 h-3 bg-destructive rounded-full mr-2"></div>
                 Fighting/Eating
@@ -156,7 +192,7 @@ const ReportSighting = () => {
           <Button 
             type="submit" 
             className="w-full touch-target gradient-safari text-primary-foreground text-base font-semibold"
-            disabled={!selectedSpecies.trim()}
+            disabled={!selectedSpecies.trim() || !reporterName.trim() || !reporterSurname.trim()}
           >
             Report Sighting
           </Button>
